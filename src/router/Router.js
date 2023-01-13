@@ -1,5 +1,9 @@
-import HeaderOnly from '~/Layout/HeaderOnly';
+
+//layout
+import HeaderOnly from '~/layout/HeaderOnly';
 import { configRouter } from '~/configs/router';
+
+//components
 import Course from '~/pages/Course';
 import Following from '~/pages/Following';
 import Home from '~/pages/Home/Home';

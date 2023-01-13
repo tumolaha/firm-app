@@ -5,13 +5,16 @@ import reportWebVitals from '~/reportWebVitals';
 import GlobalStyles from '~/components/GlobalStyles';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
+import { StyledEngineProvider } from '@mui/material';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <Provider store={store}>
             <GlobalStyles>
-                <App />
+                <StyledEngineProvider injectFirst>
+                    <App />
+                </StyledEngineProvider>
             </GlobalStyles>
         </Provider>
     </React.StrictMode>,
