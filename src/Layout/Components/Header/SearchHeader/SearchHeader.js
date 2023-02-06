@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { alpha, InputBase, styled } from '@mui/material';
+import { alpha, Box, CircularProgress, InputBase, Stack, styled } from '@mui/material';
 import HeadlessTippy from '@tippyjs/react/headless';
 //icon
-import { MagnifyingGlass } from 'phosphor-react';
+import { MagnifyingGlass, SpinnerGap, XCircle } from 'phosphor-react';
 //custom hook
 import useDebounce from '~/hook/useDebounce';
 //components
-import { PopperWrapper } from '~/components/Popper';
 import * as searchRequest from '~/services/SearchServices';
 import SearchResultItem from './SearchResultItem';
+import theme from '~/themes';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -47,10 +47,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         transition: theme.transitions.create('width'),
         width: '100%',
         [theme.breakpoints.up('sm')]: {
-            width: '12ch',
-            '&:focus': {
-                width: '20ch',
-            },
+            width: '20ch',
         },
     },
 }));
@@ -78,8 +75,9 @@ function SearchHeader() {
                 setIsSearching(true);
                 const ApiRequest = async () => {
                     const res = await searchRequest.search(debouncedSearchTerm);
-                    setResults(res.results);
+                    setResults(res.results.filter((item) => item.poster_path != null));
                     setIsSearching(false);
+                    console.log(res.results);
                 };
                 ApiRequest();
             } else {
@@ -89,7 +87,6 @@ function SearchHeader() {
         },
         [debouncedSearchTerm], // Only call effect if debounced search term changes
     );
-        console.log(results);
     const handleClear = () => {
         setSearchTerm('');
         setResults([]);
@@ -106,22 +103,21 @@ function SearchHeader() {
             setSearchTerm(searchValue);
         }
     };
+
     return (
         <>
             <HeadlessTippy
                 interactive
                 visible={showResult && results.length > 0}
-                placemen="bottom"
+                placement="bottom"
                 onClickOutside={handleHideResult}
                 render={(attrs) => (
-                    <div className="box" tabIndex="-1" {...attrs}>
-                        <PopperWrapper>
-                            <SearchResultItem data={results} />
-                        </PopperWrapper>
+                    <div className="box" tabIndex="-1" {...attrs} style={{ margin: 0 }}>
+                        <SearchResultItem data={results} />
                     </div>
                 )}
             >
-                <div>
+                <div style={{ margin: '0 !important' }}>
                     <Search>
                         <SearchIconWrapper>
                             <MagnifyingGlass size={20} />
@@ -134,6 +130,23 @@ function SearchHeader() {
                             ref={inputRef}
                             onFocus={() => setShowResult(true)}
                         />
+                        <Box
+                            sx={{
+                                height: '20px',
+                                width: '20px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginRight: '10px'
+                            }}
+                        >
+                            {!!searchTerm && !isSearching && (
+                                <Stack onClick={handleClear} size="small" p={1}>
+                                    <XCircle size={20} />
+                                </Stack>
+                            )}
+                            {isSearching && <CircularProgress size={15} color={'grey'} sx={{ fontSize: '0.8rem' }} />}
+                        </Box>
                     </Search>
                 </div>
             </HeadlessTippy>

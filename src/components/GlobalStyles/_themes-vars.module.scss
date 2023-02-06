@@ -1,5 +1,6 @@
 // paper & background
 $paper: #ffffff;
+$background: #DFDFE8;
 
 // primary
 $primaryLight: #e3f2fd;
@@ -80,6 +81,7 @@ $darkTextSecondary: #8492c4;
 :export {
     // paper & background
     paper: $paper;
+    lightBackground: $background;
 
     // primary
     primaryLight: $primaryLight;
